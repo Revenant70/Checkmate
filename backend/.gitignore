@@ -1,5 +1,5 @@
 HELP.md
-target/
+../target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### important config files ###
-/src/main/resources/application.properties
+backend/src/main/resources/application.properties
