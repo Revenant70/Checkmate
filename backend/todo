@@ -1,0 +1,14 @@
+# Checkmate
+
+The scope for this project is an authentication system and a working todo list. Nothing more unless you wanted to add more later.
+
+## Backend
+
+- Create security for user auth
+- Create basic username and password authentication
+- Build a Oauth mechanism
+
+## Frontend
+
+- Make a confirmation code page where it takes the code they got via email
+- Create a reset password page
