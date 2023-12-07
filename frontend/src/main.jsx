@@ -5,6 +5,8 @@ import Auth from './components/UserAuth.jsx'
 import Body from './components/Body.jsx'
 import ForgotPass from './components/UserForgotPassword.jsx'
 import ChangePass from './components/ChangeUserPassword.jsx'
+import SignUp from './components/SignUp.jsx';
+import ConfirmationCode from './components/UserEnterConfirmationCode.jsx';
 
 import './index.css'
 import {
@@ -29,6 +31,14 @@ const router = createBrowserRouter([
   {
     path: '/auth/passwordrecovery/changepassword',
     element: <ChangePass />,
+  },
+  {
+    path: '/auth/passwordrecovery/confirmationcode',
+    element: <ConfirmationCode />,
+  },
+  {
+    path: '/auth/signup',
+    element: <SignUp />,
   },
   {
     path: '/home',

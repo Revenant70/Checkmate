@@ -33,7 +33,6 @@ export default function UserForgotPassword() {
   }
 
   const sendConfirmationCode = async (e) => {
-    console.log(currentValidEmail)
     e.preventDefault();
     try {
       const response = await axios.post(
@@ -63,7 +62,7 @@ export default function UserForgotPassword() {
       </div>
       <div className="hero-content flex-col lg:flex-row-reverse">
         <div className="text-center lg:text-left w-5/12">
-          <h1 className="text-5xl font-bold">Enter your email</h1>
+          <h1 className="text-5xl font-bold">Enter your email.</h1>
           <p className="py-6">
             Enter the email address you have assiocated with your account for a
             link to reset your password

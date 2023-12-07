@@ -5,7 +5,7 @@ export default function ChangeUserPassword(){
   const navigate = new useNavigate();
     
 
-    function ifCorrectLLogin() {
+    function ifCorrectLogin() {
         navigate("/home");
       }
     
