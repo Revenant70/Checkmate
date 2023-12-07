@@ -20,6 +20,7 @@
     "framer-motion": "^10.16.5",
     "http-proxy-middleware": "^2.0.6",
     "react": "^18.2.0",
+    "react-auth-code-input": "^3.2.1",
     "react-code-input": "^3.10.1",
     "react-dom": "^18.2.0",
     "react-input-code": "^1.0.10",
