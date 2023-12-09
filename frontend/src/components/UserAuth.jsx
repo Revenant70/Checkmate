@@ -11,14 +11,16 @@ export default function UserAuth() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/auth/login", {
-          email,
-          password,
+        "http://localhost:8080/api/users/login", {
+          email: email,
+          password: password,
         }
       );
       console.log(response);
-      if(response.data != ""){
-        navigate("/home");
+      if(response.status){
+        if(response.data === "User authenticated successfully") {
+          navigate("/home");
+        }
       }
 
     } catch (e) {

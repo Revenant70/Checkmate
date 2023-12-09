@@ -36,7 +36,7 @@ export default function UserForgotPassword() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/users/auth/send-confirmation-code", {
+        "http://localhost:8080/api/users/send-confirmation-code", {
           email: currentValidEmail
         }
       );

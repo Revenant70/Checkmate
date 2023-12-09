@@ -23,21 +23,31 @@ export default function SignUp() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/users/auth/signup",
-        {
-          email: email,
-          password: password,
-          username: username,
-          firstname: firstname,
-          lastname: lastname
-        }
+          "http://localhost:8080/api/users/signup",
+          {
+            email: email,
+            password: password,
+            username: username,
+            firstname: firstname,
+            lastname: lastname
+          }
       );
-      console.log(response);
-      if (response.data != "" && response.status == 200) {
-        navigate("/home");
+
+      if (response.status === 200) {
+        // Check if the response data indicates success (you might customize this based on your API response)
+        if (response.data && response.data.success) {
+          // There is an instance in the database, navigate to the next page
+          navigate("/home");
+        } else {
+          // Handle the case where the signup was not successful
+          console.log("Signup failed:", response.data.message);
+        }
+      } else {
+        // Handle unexpected status codes
+        console.log("Unexpected response status:", response.status);
       }
-    } catch (e) {
-      console.log("Login failed", e.message);
+    } catch (error) {
+      console.error("Error during signup:", error.message);
     }
   };
 
