@@ -5,13 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name="todo")
 @Getter
 @Setter
 @ToString
-public class TaskEntity {
-
+public class TaskEntity implements Serializable {
     @Id
     @Column(name = "taskid")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,6 +31,6 @@ public class TaskEntity {
     private String title;
 
     @Column(name = "userid")
-    private Long userid;
+    private Long userId;
 
 }

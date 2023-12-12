@@ -3,12 +3,15 @@ package com.todo.backend.repository;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
+
+
 @Entity
 @Table(name="users")
 @Getter
 @Setter
 @ToString
-public class UserEntity {
+public class UserEntity implements Serializable {
 
     @Id
     @Column(name = "userid")
@@ -31,6 +34,9 @@ public class UserEntity {
     private String password;
 
     @Column(name = "enabled", unique = true)
-    private boolean enabled;
+    private boolean enabled = true;
+
+    private String userRole;
+
 
 }
