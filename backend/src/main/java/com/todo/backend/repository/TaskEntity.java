@@ -30,7 +30,5 @@ public class TaskEntity implements Serializable {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "userid")
-    private Long userId;
 
 }

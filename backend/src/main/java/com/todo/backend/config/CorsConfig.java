@@ -7,8 +7,9 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 public class CorsConfig {
 
     public void CorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
+        registry.addMapping("/**")
                 .allowedOrigins("http://localhost5173")
                 .allowedMethods("GET", "POST", "PUT", "DELETE");
+
     }
 }

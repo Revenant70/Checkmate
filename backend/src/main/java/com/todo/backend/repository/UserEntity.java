@@ -14,9 +14,11 @@ import java.io.Serializable;
 public class UserEntity implements Serializable {
 
     @Id
-    @Column(name = "userid")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long userid;
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "firstname")
     private String firstname;
@@ -24,19 +26,9 @@ public class UserEntity implements Serializable {
     @Column(name = "lastname")
     private String lastname;
 
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "username")
-    private String username;
-
-    @Column(name = "password")
-    private String password;
-
     @Column(name = "enabled", unique = true)
     private boolean enabled = true;
 
-    private String userRole;
 
 
 }

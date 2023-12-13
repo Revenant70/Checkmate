@@ -18,10 +18,4 @@ public class TaskService implements Serializable {
     private TaskRepository taskRepository;
 
 
-
-    public List getUserTasks(Long userId){
-        return taskRepository.findAllByuserId(userId);
-
-    }
-
 }

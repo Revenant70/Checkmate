@@ -12,5 +12,4 @@ import java.util.Optional;
 @EnableJpaRepositories
 public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
-    List findAllByuserId(@Param("userId") Long userId);
 }
