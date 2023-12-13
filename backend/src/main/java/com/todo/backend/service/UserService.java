@@ -43,16 +43,10 @@ public class UserService implements Serializable {
         if(userRepository.findByUsername(userEntity.getUsername()) == null) {
             throw new UsernameNotFoundException("User " + userEntity.getUsername() + " was not found");
         }
-        System.out.println("Got past user not found");
-        if(userRepository.findByUsername(userEntity.getUsername()) != null) {
-            UserEntity dbUser = userRepository.findByUsername(userEntity.getUsername());
-            System.out.println(dbUser + " " + userEntity + " " + passwordEncoder.matches(dbUser.getPassword(), userEntity.getPassword()));
-            if(!passwordEncoder.matches(dbUser.getPassword(), userEntity.getPassword())) {
-                throw new BadCredentialsException("Password was incorrect");
-            }
+        UserEntity dbUser = userRepository.findByUsername(userEntity.getUsername());
+        if(!passwordEncoder.matches(userEntity.getPassword(), dbUser.getPassword())) {
+            throw new BadCredentialsException("Password was incorrect");
         }
-        System.out.println("Got past pass incorrect");
-
         return userEntity;
     }
 
