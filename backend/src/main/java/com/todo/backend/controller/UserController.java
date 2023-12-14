@@ -1,25 +1,15 @@
 package com.todo.backend.controller;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.todo.backend.repository.TaskEntity;
 import com.todo.backend.repository.UserEntity;
-import com.todo.backend.service.TaskService;
 import com.todo.backend.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import java.security.Principal;
-import java.util.Enumeration;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -59,10 +49,16 @@ public class UserController {
     public ResponseEntity<String> loginUser(@RequestBody UserEntity user) throws Exception{
         try {
             // Attempt to authenticate the user
-            UserEntity authenticatedUser = userService.userLogin(user);
+            UserEntity userEntity = userService.userLogin(user);
+            SecurityContext context = SecurityContextHolder.getContext();
+            Authentication authentication = context.getAuthentication();
+            String username = authentication.getName();
+            Object principal = authentication.getPrincipal();
+            System.out.println(username + " " + principal);
             return new ResponseEntity<>("User authenticated successfully", HttpStatus.OK);
         } catch (Exception e) {
             // Handle exceptions (e.g., database errors)
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error during user authentication: " + e.getMessage());
         }
