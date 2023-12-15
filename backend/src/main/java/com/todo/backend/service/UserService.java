@@ -1,13 +1,11 @@
 package com.todo.backend.service;
 
-import com.todo.backend.repository.AuthorityEntity;
-import com.todo.backend.repository.AuthorityRepository;
-import com.todo.backend.repository.UserEntity;
-import com.todo.backend.repository.UserRepository;
+import com.todo.backend.repository.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,9 +19,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -38,6 +39,9 @@ public class UserService implements Serializable {
     private AuthorityRepository authorityRepository;
 
     @Autowired
+    private UserDetailsManager userDetailsManager;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
 
@@ -45,10 +49,14 @@ public class UserService implements Serializable {
         if(userRepository.findByUsername(userEntity.getUsername()) != null) {
             throw new UsernameNotFoundException("Username " + userEntity.getUsername() + " already exists");
         }
-
-        AuthorityEntity authorityEntity = authorityRepository.findByAuthority("ROLE_USER");
-        userEntity.getAuthorities().add(authorityEntity);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+
+        AuthorityEntity authorityEntity = new AuthorityEntity();
+        authorityEntity.setUsername(userEntity.getUsername());
+        authorityEntity.setAuthority("ROLE_USER");
+
+        authorityRepository.save(authorityEntity);
+
         return userRepository.save(userEntity);
     }
 
@@ -63,15 +71,11 @@ public class UserService implements Serializable {
         if(!passwordEncoder.matches(userEntity.getPassword(), dbUser.getPassword())) {
             throw new BadCredentialsException("Password was incorrect");
         }
-
-        Collection<GrantedAuthority> authorities = Collections.singletonList(
-                new SimpleGrantedAuthority("ROLE_USER")
-        );
-        SecurityContext contextHolder = SecurityContextHolder.createEmptyContext();
-        Authentication authenticationReq = new UsernamePasswordAuthenticationToken(userEntity.getUsername(), userEntity.getPassword(), authorities);
-        contextHolder.setAuthentication(authenticationReq);
-
-        SecurityContextHolder.setContext(contextHolder);
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        UserDetails userDetails = userDetailsManager.loadUserByUsername(userEntity.getUsername());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userEntity.getUsername(), null, userDetails.getAuthorities());
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
 
         return userEntity;
     }

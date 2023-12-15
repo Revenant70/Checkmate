@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,14 +17,10 @@ import java.util.Set;
 public class UserEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "userid")
-    private Long userid;
-
-    @Column(name = "username")
+    @Column(name = "username", nullable = false)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "firstname")
@@ -32,16 +29,7 @@ public class UserEntity implements Serializable {
     @Column(name = "lastname")
     private String lastname;
 
-    @Column(name = "enabled")
-    private boolean enabled = true;
-
-    @ManyToMany
-    @JoinTable(
-            name = "user_authorities",
-            joinColumns = @JoinColumn(name = "userid"),
-            inverseJoinColumns = @JoinColumn(name = "authorityid")
-    )
-    private Set<AuthorityEntity> authorities = new HashSet<>();
-
+    @Column(name = "enabled", nullable = false)
+    private Boolean enabled = true;
 
 }

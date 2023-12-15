@@ -2,12 +2,15 @@ package com.todo.backend.config;
 
 import com.todo.backend.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -34,7 +37,6 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
 
-
     // Pretty self-explanatory I think but all this does is sets a filter before the http requests are allow to start looking for servlets to interact with and checks to see if they have the right credentials
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
@@ -54,6 +56,7 @@ public class SecurityConfig {
     // Password encoder duh
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 
@@ -74,5 +77,6 @@ public class SecurityConfig {
 
         return new ProviderManager(authenticationProvider);
     }
+
 
 }

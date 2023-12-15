@@ -31,7 +31,7 @@ public class TaskEntity implements Serializable {
     private String title;
 
     @ManyToOne
-    @JoinColumn(name = "userid", referencedColumnName = "userid" ,nullable = false)
+    @JoinColumn(name = "username", referencedColumnName = "username" ,nullable = false)
     private UserEntity user;
 
 }
