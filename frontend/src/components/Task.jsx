@@ -5,8 +5,12 @@ export default function Task() {
   const [tasks, setTasks] = useState([]);
 
   const fetchUserTasks = async () => {
-    const result = await axios.get("http://localhost:8080/api/v1/users/tasks/alltasks");
-    setTasks(result.data);
+    const result = await axios.get("http://localhost:8080/api/users/tasks")
+    if(result.data.isEmpty) {
+      console.log("No data");
+    } else {
+      setTasks(result.data);
+    }
   };
 
   useEffect(() => {

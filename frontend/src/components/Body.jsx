@@ -4,12 +4,6 @@ import AddTask from "./AddTasks";
 
 export default function TableBody() {
 
-  const currentUser = {};
-
-  if(currentUser != null) {
-    
-  }
-
   return (
     <>
       <Header></Header>

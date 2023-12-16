@@ -5,7 +5,6 @@ import { useState } from "react";
 import axios from "axios";
 
 export default function SignUp() {
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmationPassword, setConfirmationPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -25,9 +24,8 @@ export default function SignUp() {
       const response = await axios.post(
           "http://localhost:8080/api/users/signup",
           {
-            email: email,
-            password: password,
             username: username,
+            password: password,
             firstname: firstname,
             lastname: lastname
           }
@@ -35,9 +33,9 @@ export default function SignUp() {
 
       if (response.status === 200) {
         // Check if the response data indicates success (you might customize this based on your API response)
-        if (response.data && response.data.success) {
+        if (response.data === "User created successfully") {
           // There is an instance in the database, navigate to the next page
-          navigate("/home");
+          navigate("/auth");
         } else {
           // Handle the case where the signup was not successful
           console.log("Signup failed:", response.data.message);
@@ -73,18 +71,16 @@ export default function SignUp() {
             <form className="card-body" onSubmit={SendCreateAccount}>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">
-                    Email{" "}
-                    <span className="text-red-500 text-lg align-middle">*</span>
-                  </span>
+                  <span className="label-text">User Name{" "}
+                    <span className="text-red-500 text-lg align-middle">*</span></span>
                 </label>
                 <input
-                  type="email"
-                  placeholder="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="input input-bordered"
-                  required
+                    type="text"
+                    placeholder="user name"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="input input-bordered"
+                    required
                 />
               </div>
               <div className="form-control">
@@ -117,18 +113,6 @@ export default function SignUp() {
                   onChange={(e) => setConfirmationPassword(e.target.value)}
                   className="input input-bordered"
                   required
-                />
-              </div>
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">User Name </span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="user name"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="input input-bordered"
                 />
               </div>
               <div className="form-control">

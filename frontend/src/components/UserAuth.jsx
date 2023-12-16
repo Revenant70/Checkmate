@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function UserAuth() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = new useNavigate();
 
@@ -12,7 +12,7 @@ export default function UserAuth() {
     try {
       const response = await axios.post(
         "http://localhost:8080/api/users/login", {
-          email: email,
+          username: username,
           password: password,
         }
       );
@@ -52,13 +52,13 @@ export default function UserAuth() {
           <form className="card-body" onSubmit={authenticateUser}>
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text">Username</span>
               </label>
               <input
-                type="email"
-                placeholder="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                placeholder="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="input input-bordered"
                 required
               />
