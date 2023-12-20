@@ -15,14 +15,14 @@ import java.io.Serializable;
 public class TaskEntity implements Serializable {
     @Id
     @Column(name = "taskid")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long taskid;
 
     @Column(name = "description")
     private String desc;
 
-    @Column(name = "reminders")
-    private String reminders;
+    @Column(name = "duedate")
+    private String dueDate;
 
     @Column(name = "status")
     private String status;

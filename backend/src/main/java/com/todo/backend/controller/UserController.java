@@ -1,10 +1,15 @@
 package com.todo.backend.controller;
 
 import com.todo.backend.repository.UserEntity;
+import com.todo.backend.service.JwtService;
 import com.todo.backend.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,6 +26,15 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private HttpServletRequest request;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @PostMapping("/signup")
     public ResponseEntity<String> signupUser(@RequestBody UserEntity user) throws Exception{
@@ -50,14 +64,14 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody UserEntity user) throws Exception{
+        System.out.println(user);
         try {
-            // Attempt to authenticate the user
-            userService.userLogin(user);
-            SecurityContext context = SecurityContextHolder.getContext();
-            Authentication authentication = context.getAuthentication();
-            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-            System.out.println(authentication.getPrincipal() + " " + authorities);
-            return new ResponseEntity<>("User authenticated successfully", HttpStatus.OK);
+            if(userService.userLogin(user) != null) {
+                String token = jwtService.generateToken(user.getUsername());
+                return new ResponseEntity<>(token, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         } catch (Exception e) {
             // Handle exceptions (e.g., database errors)
             e.printStackTrace();

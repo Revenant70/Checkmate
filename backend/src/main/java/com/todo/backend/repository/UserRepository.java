@@ -6,8 +6,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @EnableJpaRepositories
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
-    UserEntity findByUsername(@Param("username") String username);
+    Optional<UserEntity> findByUsername(@Param("username") String username);
 }

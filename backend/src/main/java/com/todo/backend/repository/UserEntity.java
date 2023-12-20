@@ -2,6 +2,8 @@ package com.todo.backend.repository;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -14,7 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-public class UserEntity implements Serializable {
+public class UserEntity {
 
     @Id
     @Column(name = "username", nullable = false)
@@ -32,4 +34,5 @@ public class UserEntity implements Serializable {
     @Column(name = "enabled", nullable = false)
     private Boolean enabled = true;
 
+    private String roles;
 }

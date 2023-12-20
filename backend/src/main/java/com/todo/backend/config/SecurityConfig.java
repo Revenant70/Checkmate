@@ -1,59 +1,53 @@
 package com.todo.backend.config;
 
-import com.todo.backend.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
 
-    // Pretty self-explanatory I think but all this does is sets a filter before the http requests are allow to start looking for servlets to interact with and checks to see if they have the right credentials
+    private final DataSource dataSource;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http.authorizeHttpRequests(auth -> {
+
                         auth.requestMatchers("/api/tasks/**").hasRole("USER");
-                        auth.requestMatchers("/", "/api/users/**").permitAll();
+                        auth.requestMatchers("/", "/api/users/**", "/api/users/login").permitAll();
                         auth.anyRequest().authenticated();
                         })
                         .sessionManagement(session -> session
-                                .maximumSessions(1)
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                                .maximumSessions(1).maxSessionsPreventsLogin(true)
                         )
+                        .authenticationProvider(authenticationProvider())
+                        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                         .csrf(AbstractHttpConfigurer::disable)
-                        .formLogin(Customizer.withDefaults())
                         .build();
     }
 
-    // Password encoder duh
     @Bean
     public PasswordEncoder passwordEncoder() {
 
@@ -62,21 +56,20 @@ public class SecurityConfig {
 
     // Postgresql interface that helps manage data retrieval and input through the security context
     @Bean
-    JdbcUserDetailsManager users(DataSource dataSource) {
+    JdbcUserDetailsManager jdbcUserDetailsManager() {
         return new JdbcUserDetailsManager(dataSource);
     }
 
-    // No clue what this does yet
     @Bean
-    public AuthenticationManager authenticationManager(
-            UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder);
-
-        return new ProviderManager(authenticationProvider);
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authenticationProvider=new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(jdbcUserDetailsManager());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
     }
-
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
 
 }

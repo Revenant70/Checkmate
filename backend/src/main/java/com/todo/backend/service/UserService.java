@@ -1,6 +1,11 @@
 package com.todo.backend.service;
 
 import com.todo.backend.repository.*;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoder;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -24,13 +29,13 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.security.Key;
+import java.util.*;
 
 
 @Service
 public class UserService implements Serializable {
+
 
     @Autowired
     private UserRepository userRepository;
@@ -61,24 +66,32 @@ public class UserService implements Serializable {
     }
 
     public UserEntity userLogin(UserEntity userEntity){
+
         if(userEntity.getUsername() == null){
             throw new UsernameNotFoundException("User cannot be null");
         }
-        if(userRepository.findByUsername(userEntity.getUsername()) == null) {
+        Optional<UserEntity> dbUser = userRepository.findByUsername(userEntity.getUsername());
+        if(dbUser.isEmpty()) {
             throw new UsernameNotFoundException("User " + userEntity.getUsername() + " was not found");
         }
-        UserEntity dbUser = userRepository.findByUsername(userEntity.getUsername());
-        if(!passwordEncoder.matches(userEntity.getPassword(), dbUser.getPassword())) {
+        if(!passwordEncoder.matches(userEntity.getPassword(), dbUser.get().getPassword())) {
             throw new BadCredentialsException("Password was incorrect");
         }
+
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         UserDetails userDetails = userDetailsManager.loadUserByUsername(userEntity.getUsername());
         Authentication authentication = new UsernamePasswordAuthenticationToken(userEntity.getUsername(), null, userDetails.getAuthorities());
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
 
-        return userEntity;
+        if(authentication.isAuthenticated()) {
+            return userEntity;
+        } else {
+            return null;
+        }
     }
+
+
 
 
 }
