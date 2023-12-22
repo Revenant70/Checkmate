@@ -3,7 +3,6 @@ package com.todo.backend.service;
 import com.todo.backend.repository.TaskEntity;
 import com.todo.backend.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;

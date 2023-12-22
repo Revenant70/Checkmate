@@ -9,15 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -28,9 +33,6 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private HttpServletRequest request;
-
-    @Autowired
     private JwtService jwtService;
 
     @Autowired
@@ -38,22 +40,11 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signupUser(@RequestBody UserEntity user) throws Exception{
-        try {
-
-            // Attempt to authenticate the user
-            UserEntity userEntity = userService.userSignup(user);
-            if (userEntity != null) {
-                // User authentication successful
-                return new ResponseEntity<>("User created successfully", HttpStatus.OK);
-            } else {
-                // User signup failed
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Failed to create user");
-            }
-        } catch (Exception e) {
-            // Handle exceptions (e.g., database errors)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error during user signup: " + e.getMessage());
+        UserDetails userDetails = userService.userSignup(user);
+        if(userDetails != null) {
+            return new ResponseEntity<>("Signup successful", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -64,21 +55,20 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody UserEntity user) throws Exception{
-        System.out.println(user);
-        try {
-            if(userService.userLogin(user) != null) {
-                String token = jwtService.generateToken(user.getUsername());
-                return new ResponseEntity<>(token, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+        try{
+            Optional<UserEntity> userEntity = userService.userLogin(user);
+            if(userEntity.isEmpty()) {
+                throw new UsernameNotFoundException("User not found");
             }
-        } catch (Exception e) {
-            // Handle exceptions (e.g., database errors)
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error during user authentication: " + e.getMessage());
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+            SecurityContext securityContext = SecurityContextHolder.getContext();
+            System.out.println(securityContext);
+            String token = jwtService.generateToken(user.getUsername());
+            return ResponseEntity.ok(token);
+        } catch(AuthenticationException e) {
+            throw new BadCredentialsException("Invalid username or password", e);
         }
-
     }
 
     @PostMapping("/logout")

@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Collection;
-
 @Entity
 @Table(name = "authorities", uniqueConstraints = {
         @UniqueConstraint(name = "ix_auth_username", columnNames = {"username", "authority"})
