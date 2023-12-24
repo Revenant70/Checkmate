@@ -16,11 +16,9 @@ export default function UserAuth() {
           password: password,
         }
       );
-      console.log(response);
-      if(response.status){
-        if(response.data === "User authenticated successfully") {
+      if(response.status == 200){
+          localStorage.setItem("JWT", response.data)
           navigate("/home");
-        }
       }
 
     } catch (e) {

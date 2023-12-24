@@ -19,4 +19,9 @@ public class TaskService implements Serializable {
     public Optional<List<TaskEntity>> getTasks(String username){
         return taskRepository.findByUserUsername(username);
     }
+
+    public void createTask(TaskEntity taskEntity){
+        
+        taskRepository.save(taskEntity);
+    }
 }

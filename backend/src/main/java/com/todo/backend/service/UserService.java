@@ -27,8 +27,8 @@ public class UserService implements Serializable {
         return userEntity;
     }
 
-    public Optional<UserEntity> userLogin(UserEntity userEntity){
-        Optional<UserEntity> dbUser = userRepository.findByUsername(userEntity.getUsername());
+    public UserEntity userLogin(UserEntity userEntity){
+        UserEntity dbUser = userRepository.findByUsername(userEntity.getUsername());
         return userRepository.findByUsername(userEntity.getUsername());
     }
 

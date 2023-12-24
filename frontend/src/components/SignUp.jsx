@@ -30,16 +30,9 @@ export default function SignUp() {
             lastname: lastname
           }
       );
-
       if (response.status === 200) {
         // Check if the response data indicates success (you might customize this based on your API response)
-        if (response.data === "User created successfully") {
-          // There is an instance in the database, navigate to the next page
           navigate("/auth");
-        } else {
-          // Handle the case where the signup was not successful
-          console.log("Signup failed:", response.data.message);
-        }
       } else {
         // Handle unexpected status codes
         console.log("Unexpected response status:", response.status);

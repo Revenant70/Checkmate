@@ -1,7 +1,10 @@
 package com.todo.backend.controller;
 
 import com.todo.backend.repository.TaskEntity;
+import com.todo.backend.repository.UserEntity;
+import com.todo.backend.repository.UserRepository;
 import com.todo.backend.service.TaskService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,9 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
+    
+    @Autowired
+    private UserRepository userRepository;
 
 
     @GetMapping("/tasks")
@@ -31,13 +37,23 @@ public class TaskController {
             System.out.println(e.getMessage());
             return new ResponseEntity<>("There was an internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        System.out.println(tasks);
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
     @PostMapping("/tasks")
-    public ResponseEntity<String> createUserTask(@RequestBody TaskEntity tasks) throws Exception{
-        System.out.println(tasks);
-        return new ResponseEntity("Task created successfully", HttpStatus.CREATED);
+    public ResponseEntity<String> createUserTask(@RequestBody TaskEntity tasks, Authentication auth) throws Exception{
+        try{
+            String loggedInUser = auth.getName();
+            tasks.setUser(userRepository.findByUsername(loggedInUser));
+            taskService.createTask(tasks);
+            System.out.println(tasks);
+            return new ResponseEntity<>("Task created successfully", HttpStatus.CREATED);
+        } catch(Exception e) {
+            System.out.println(e.getLocalizedMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getLocalizedMessage());
+        }
+        
     }
 //    @PreAuthorize("hasRole('ROLE_USER')")
 //    @GetMapping("/tasks/{taskid}")

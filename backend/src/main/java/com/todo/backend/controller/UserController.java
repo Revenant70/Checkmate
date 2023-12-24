@@ -56,8 +56,8 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody UserEntity user) throws Exception{
         try{
-            Optional<UserEntity> userEntity = userService.userLogin(user);
-            if(userEntity.isEmpty()) {
+            UserEntity userEntity = userService.userLogin(user);
+            if(userEntity == null) {
                 throw new UsernameNotFoundException("User not found");
             }
             Authentication authentication = authenticationManager.authenticate(

@@ -5,12 +5,23 @@ export default function Task() {
   const [tasks, setTasks] = useState([]);
 
   const fetchUserTasks = async () => {
-    const result = await axios.get("http://localhost:8080/api/users/tasks")
-    if(result.data.isEmpty) {
-      console.log("No data");
-    } else {
-      setTasks(result.data);
+    try {
+      const token = localStorage.getItem("JWT");
+      const result = await axios.get("http://localhost:8080/api/tasks", {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+      })
+      console.log(result)
+      if(result.data.isEmpty) {
+        console.log("No data");
+      } else {
+        setTasks(result.data);
+      }
+    } catch (e) {
+      console.log(e)
     }
+    
   };
 
   useEffect(() => {
@@ -49,7 +60,7 @@ export default function Task() {
                         </div>
                       </th>
                       <th>{task.desc}</th>
-                      <th>{task.reminders}</th>
+                      <th>{task.dueDate}</th>
                       <th>
                         <button className="btn btn-ghost btn-s">details</button>
                       </th>
