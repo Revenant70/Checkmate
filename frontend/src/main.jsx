@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import Auth from './components/UserAuth.jsx'
-import Body from './components/Body.jsx'
+import Task from "./components/Task.jsx"
 import ForgotPass from './components/UserForgotPassword.jsx'
 import ChangePass from './components/ChangeUserPassword.jsx'
 import SignUp from './components/SignUp.jsx';
@@ -42,7 +42,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/home',
-    element: <Body />,
+    element: <Task />,
   },
 
   

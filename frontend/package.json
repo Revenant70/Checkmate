@@ -25,7 +25,8 @@
     "react-dom": "^18.2.0",
     "react-input-code": "^1.0.10",
     "react-native-confirmation-code-field": "^7.3.2",
-    "react-router-dom": "^6.19.0"
+    "react-router-dom": "^6.19.0",
+    "styled-components": "^6.1.6"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
