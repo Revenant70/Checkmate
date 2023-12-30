@@ -18,6 +18,8 @@ export default function AddTask() {
     stillRotate: { rotate: [0, 0, 270, 270, 0], transition: { duration: 1.4 } },
   };
 
+  
+
   const addTasks = async (e) => {
     e.preventDefault();
     try {
@@ -36,7 +38,8 @@ export default function AddTask() {
           },
         }
       );
-      if (response.status == 200) {
+      if (response.status == 201) {
+        setIsOpen(!isOpen);
         console.log("Task added");
       }
     } catch (e) {

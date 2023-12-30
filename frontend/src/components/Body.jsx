@@ -1,12 +1,12 @@
 import Task from "./Task";
-import AddTask from "./AddTasks";
+import ManageTasks from "./ManageTasks";
 
 export default function TableBody() {
   return (
     <>
       <div className="h-screen">
         <Task></Task>
-        <AddTask></AddTask>
+        <ManageTasks></ManageTasks>
       </div>
     </>
   );

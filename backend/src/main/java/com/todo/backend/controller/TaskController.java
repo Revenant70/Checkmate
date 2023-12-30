@@ -55,25 +55,28 @@ public class TaskController {
         }
         
     }
-//    @PreAuthorize("hasRole('ROLE_USER')")
 //    @GetMapping("/tasks/{taskid}")
 //    public ResponseEntity getSingleUserTask() throws Exception {
 //        return new ResponseEntity(, HttpStatus.OK);
 //    }
 //
-//    @PreAuthorize("hasRole('ROLE_USER')")
 //    @PutMapping("/tasks/{taskId}")
 //    public ResponseEntity updateUserTask() throws Exception {
 //        return new ResponseEntity(, HttpStatus.OK);
 //    }
 //
-//    @PreAuthorize("hasRole('ROLE_USER')")
-//    @DeleteMapping("/tasks/{taskId}")
-//    public ResponseEntity deleteUserTask() throws Exception {
-//        return new ResponseEntity(, HttpStatus.OK);
-//    }
+   @DeleteMapping("/tasks/{taskId}")
+   public ResponseEntity<String> deleteUserTask(@PathVariable Long taskId) throws Exception {
+       try {
+            System.out.println(taskId);
+            taskService.deleteTask(taskId);
+            return new ResponseEntity<>("Task deleted successfully", HttpStatus.OK);
+       } catch(Exception exception) {
+            System.out.println(exception);
+        return new ResponseEntity<>("Couldn't delete task", HttpStatus.INTERNAL_SERVER_ERROR);
+       }
+   }
 //
-//    @PreAuthorize("hasRole('ROLE_USER')")
 //    @DeleteMapping("/tasks/{taskId}/complete")
 //    public ResponseEntity deleteUserTask() throws Exception {
 //        return new ResponseEntity(, HttpStatus.OK);
