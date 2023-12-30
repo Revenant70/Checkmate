@@ -11,7 +11,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Task() {
-  const [taskId, setTaskId] = useState("");
+  let taskId = "";
   const [taskName, setTaskName] = useState("");
   const [desc, setDescName] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -30,7 +30,6 @@ export default function Task() {
   };
 
   const deleteTask = async (taskId) => {
-    console.log(taskId);
     try {
       const token = localStorage.getItem("JWT");
       const response = await axios.delete(
@@ -42,16 +41,15 @@ export default function Task() {
         }
       );
       if (response.status == 200) {
+        fetchUserTasks();
         console.log("Task deleted");
-      } 
+      }
     } catch (e) {
       console.log("Task failed to be added to the system:", e.message);
     }
+  };
 
-  }
-
-  const editTask = async (e) => {
-    e.preventDefault();
+  const editTask = async (taskId) => {
     try {
       const token = localStorage.getItem("JWT");
       const response = await axios.put(
@@ -69,9 +67,10 @@ export default function Task() {
         }
       );
       if (response.status == 200) {
+        fetchUserTasks();
         setIsOpen(!isOpen);
         console.log("Task edited");
-      } 
+      }
     } catch (e) {
       console.log("Task failed to be added to the system:", e.message);
     }
@@ -85,7 +84,7 @@ export default function Task() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(result.data);
+      console.log(result.data)
       if (result.data.isEmpty) {
         console.log("No data");
       } else {
@@ -98,7 +97,7 @@ export default function Task() {
 
   useEffect(() => {
     fetchUserTasks();
-  }, []);
+  }, [tasks]);
 
   function toggleModalFunction() {
     setIsOpen(!isOpen);
@@ -154,6 +153,7 @@ export default function Task() {
                             whileHover="shake"
                             initial="initial"
                             variants={shakeVariants}
+                            onClick={() => editTask(task.taskid)}
                           >
                             <FontAwesomeIcon size="lg" icon={faPen} />
                           </motion.a>
