@@ -8,6 +8,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmationPassword, setConfirmationPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
 
@@ -26,8 +27,9 @@ export default function SignUp() {
           {
             username: username,
             password: password,
+            email: email,
             firstname: firstname,
-            lastname: lastname
+            lastname: lastname,
           }
       );
       if (response.status === 200) {
@@ -104,6 +106,22 @@ export default function SignUp() {
                   placeholder="confirm password"
                   value={confirmationPassword}
                   onChange={(e) => setConfirmationPassword(e.target.value)}
+                  className="input input-bordered"
+                  required
+                />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">
+                    Email{" "}
+                    <span className="text-red-500 text-lg align-middle">*</span>
+                  </span>
+                </label>
+                <input
+                  type="email"
+                  placeholder="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="input input-bordered"
                   required
                 />

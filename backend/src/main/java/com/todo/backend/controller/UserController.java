@@ -3,6 +3,8 @@ package com.todo.backend.controller;
 import com.todo.backend.repository.UserEntity;
 import com.todo.backend.service.JwtService;
 import com.todo.backend.service.UserService;
+
+import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +14,15 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
-
+    
     @Autowired
     private UserService userService;
 
@@ -53,11 +58,6 @@ public class UserController {
         }
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity logoutUser(@RequestBody UserEntity user) throws Exception{
-        return new ResponseEntity(user, HttpStatus.OK);
-    }
-
     @PutMapping("/edit-profile")
     public ResponseEntity<?> editUserProfile(@RequestBody UserEntity updatedUser, Authentication authentication) throws Exception{
         try {
@@ -77,4 +77,22 @@ public class UserController {
             return new ResponseEntity<>("Could not delete profile", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody UserEntity userEntity) {
+        try {
+            userService.forgotPassword(userEntity.getEmail());
+            return new ResponseEntity<String>("Confirmation code sent", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("User Email doesn't exist", HttpStatus.INTERNAL_SERVER_ERROR);
+        }        
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody UserEntity userEntity) {
+        
+        return new ResponseEntity<>(null);
+    }
+    
+    
 }

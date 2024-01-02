@@ -6,7 +6,6 @@ import Task from "./components/Task.jsx"
 import ForgotPass from './components/UserForgotPassword.jsx'
 import ChangePass from './components/ChangeUserPassword.jsx'
 import SignUp from './components/SignUp.jsx';
-import ConfirmationCode from './components/ConfirmationCodeField.jsx';
 import UserProfile from './components/UserProfile.jsx';
 
 import './index.css'
@@ -30,12 +29,8 @@ const router = createBrowserRouter([
     element: <ForgotPass />,
   },
   {
-    path: '/auth/passwordrecovery/changepassword',
+    path: '/auth/passwordrecovery/changepassword/:userId/:token',
     element: <ChangePass />,
-  },
-  {
-    path: '/auth/passwordrecovery/confirmationcode',
-    element: <ConfirmationCode />,
   },
   {
     path: '/auth/signup',

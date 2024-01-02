@@ -4,14 +4,18 @@ import com.todo.backend.repository.*;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Service
 public class UserService implements Serializable {
@@ -21,6 +25,12 @@ public class UserService implements Serializable {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JavaMailSender emailSender;
+
+    @Value("${spring.mail.username}")
+    private String gmail;
 
     public UserDetails userSignup(UserEntity userEntity) {
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
@@ -55,8 +65,8 @@ public class UserService implements Serializable {
                     dbUserEntity.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
                 }
                 userRepository.save(dbUserEntity);
-        }  
-        } catch(EntityNotFoundException e) {
+            }
+        } catch (EntityNotFoundException e) {
             e.printStackTrace();
             System.out.println(e.getLocalizedMessage());
         }
@@ -66,9 +76,30 @@ public class UserService implements Serializable {
         try {
             UserEntity userEntity = userRepository.findByUsername(authentication.getName());
             userRepository.deleteById(userEntity.getUserid());
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             System.out.println(exception.getLocalizedMessage());
         }
+    }
+
+    public void forgotPassword(String email) {
+        try {
+            UserEntity userEntity = userRepository.findByEmail(email);
+            Date date = ResetTokenService.calculateExpiryDate();
+            ResetToken token = ResetTokenService.generateToken(userEntity, date);
+
+            String url = "http://localhost:5173/auth/passwordrecovery/changepassword/" +
+                     userEntity.getUserid() + "/" + token.getToken();
+
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(gmail);
+            message.setTo(email);
+            message.setSubject("reset password");
+            message.setText("Click this link to reset your password: " + url);
+            emailSender.send(message);
+        } catch (Exception e) {
+            System.out.println(e.getLocalizedMessage());
+        }
+
     }
 
 }

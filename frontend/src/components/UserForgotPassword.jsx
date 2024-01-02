@@ -10,7 +10,6 @@ export default function UserForgotPassword() {
   const emailRegex = new RegExp("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b");
   const [currentBtnMessage, setCurrentBtnMessage] = useState("Send code");
   const [email, setEmail] = useState("");
-  const [currentValidEmail, setCurrentValidEmail] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const navigate = new useNavigate();
 
@@ -21,7 +20,6 @@ export default function UserForgotPassword() {
   function confirmationPopup(e){
     e.preventDefault();
     if(email != "" && emailRegex.test(email)) {
-        setCurrentValidEmail(email);
         setIsOpen((isOpen) => !isOpen);
         setCurrentBtnMessage("Resend code");
         sendConfirmationCode(e);
@@ -35,15 +33,12 @@ export default function UserForgotPassword() {
   const sendConfirmationCode = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/users/send-confirmation-code", {
-          email: currentValidEmail
+      await axios.post(
+        "http://localhost:8080/api/users/forgot-password", 
+        {
+          email: email
         }
       );
-      console.log(response);
-      if(response.data != "" && response.status == 200){
-        navigate("/auth/passwordrecovery/changepassword");
-      }
 
     } catch (e) {
       console.log('Login failed', e.message);
@@ -69,7 +64,7 @@ export default function UserForgotPassword() {
           </p>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-          <form className="card-body" onSubmit={sendConfirmationCode}>
+          <form className="card-body" onSubmit={confirmationPopup}>
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -105,7 +100,7 @@ export default function UserForgotPassword() {
             <div className="hero-content">
               <div className="py-6">
                 <p className="text-lg text-center">code was sent to your email</p>
-                <p className="py-1 text-xl text-center font-bold">{currentValidEmail}</p>
+                <p className="py-1 text-xl text-center font-bold">{email}</p>
               </div>
             </div>
 

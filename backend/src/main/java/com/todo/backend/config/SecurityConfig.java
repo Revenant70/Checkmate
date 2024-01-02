@@ -33,7 +33,7 @@ public class SecurityConfig {
         return http.authorizeHttpRequests(auth -> {
 
                         auth.requestMatchers("/api/tasks/**").hasAuthority(Role.USER.name());
-                        auth.requestMatchers("/", "/api/users/**", "/api/users/login").permitAll();
+                        auth.requestMatchers("/", "/api/users/**").permitAll();
                         auth.anyRequest().authenticated();
                         })
                         .csrf(AbstractHttpConfigurer::disable)
