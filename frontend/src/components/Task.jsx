@@ -1,5 +1,4 @@
-import AddTask from "./AddTasks";
-
+import AddTask from "./TaskBar";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,13 +8,16 @@ import {
   faTrash,
   faPen,
   faX,
+  faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 export default function Task() {
+  const navigate = new useNavigate();
   const dateFormatRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[01])\s*(1[0-2]|0?[1-9]):[0-5][0-9](AM|PM)$/i;
 
-  let taskId = "";
+  const [taskId, setTaskId] = useState("")
   const [taskName, setTaskName] = useState("");
   const [desc, setDescName] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -34,7 +36,8 @@ export default function Task() {
     },
   };
 
-  const completeTask = async (taskId) => {
+  const completeTask = async (e) => {
+    e.preventDefault();
     try {
       const token = localStorage.getItem("JWT");
       const response = await axios.put(
@@ -75,8 +78,9 @@ export default function Task() {
     }
   };
 
-  const editTask = async (taskId) => {
+  const editTask = async (e) => {
     console.log(taskId);
+    e.preventDefault();
     try {
       const token = localStorage.getItem("JWT");
       const response = await axios.put(
@@ -141,8 +145,19 @@ export default function Task() {
     }
   };
 
+  function sendBackToAuth() {
+    navigate("/auth");
+  }
+
   return (
     <div className="h-screen">
+      <div className="fixed top-10 left-10">
+        <FontAwesomeIcon
+          className="btn btn-sm"
+          icon={faArrowLeft}
+          onClick={sendBackToAuth}
+        />
+      </div>
       <div className="h-5/6 flex justify-center items-start">
         <table className="table w-1/2 overflow-x-auto cols-xs-1 text-center">
           {/* head */}
@@ -187,7 +202,7 @@ export default function Task() {
                               whileHover="shake"
                               initial="initial"
                               variants={shakeVariants}
-                              onClick={() => completeTask(task.taskid)}
+                              onClick={(e) => completeTask(e)}
                             >
                               <FontAwesomeIcon
                                 color="green"
@@ -201,7 +216,10 @@ export default function Task() {
                               whileHover="shake"
                               initial="initial"
                               variants={shakeVariants}
-                              onClick={() => setIsOpen(!isOpen)}
+                              onClick={() => {
+                                setIsOpen(!isOpen);
+                                setTaskId(task.taskid);
+                              }}
                             >
                               <FontAwesomeIcon size="lg" icon={faPen} />
                             </motion.a>
@@ -211,7 +229,7 @@ export default function Task() {
                               whileHover="shake"
                               initial="initial"
                               variants={shakeVariants}
-                              onClick={() => deleteTask(task.taskid)}
+                              onClick={() => deleteTask(Event, task.taskid)}
                             >
                               <FontAwesomeIcon
                                 color="red"

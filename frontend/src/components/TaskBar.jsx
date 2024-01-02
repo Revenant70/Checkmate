@@ -1,15 +1,14 @@
-/* eslint-disable react/prop-types */
+import ProfileIcon from "./ProfileIcon";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faX, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function AddTask({ fetchTasks }) {
   const dateFormatRegex =
     /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[01])\s*(1[0-2]|0?[1-9]):[0-5][0-9](AM|PM)$/i;
-  const navigate = new useNavigate();
 
   const [taskName, setTaskName] = useState("");
   const [desc, setDescName] = useState("");
@@ -64,9 +63,6 @@ export default function AddTask({ fetchTasks }) {
     }
   };
 
-  const profilePage = () => {
-    navigate("/profile/profilepage");
-  };
 
   const handleDueDateChange = (e) => {
     const value = e.target.value;
@@ -91,11 +87,11 @@ export default function AddTask({ fetchTasks }) {
   return (
     <>
       <div className="h-1/6 flex items-end justify-center">
-        <div className="footer flex flex-row grid-rows-auto items-center justify-between p-4 rounded-lg text-neutral-content w-1/2 drop-shadow-lg bg-base-200 mb-6 ">
+        <div className="footer flex flex-row grid-rows-auto items-center justify-between p-2 rounded-lg text-neutral-content w-1/2 drop-shadow-lg bg-base-200 mb-6 ">
           <aside>
             <motion.a
               onClick={toggleSpin}
-              className="items-center grid-flow-col flex flex-row cursor-pointer"
+              className="items-center grid-flow-col ml-2 flex flex-row cursor-pointer"
               whileHover={{
                 scale: 1.025,
                 transition: { duration: 0.1 },
@@ -112,19 +108,7 @@ export default function AddTask({ fetchTasks }) {
               <div className="ml-2">Add task</div>
             </motion.a>
           </aside>
-          <div className="mr-2">
-            <motion.a
-              className="cursor-pointer"
-              whileHover={{
-                scale: 1.025,
-                transition: { duration: 0.1 },
-              }}
-              whileTap={{ scale: 0.9 }}
-              onClick={profilePage}
-            >
-              <FontAwesomeIcon size="lg" icon={faUser} />
-            </motion.a>
-          </div>
+          <ProfileIcon />
         </div>
         <AnimatePresence>
           {isOpen && (

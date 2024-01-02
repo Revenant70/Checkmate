@@ -13,10 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 
-
 @Service
 public class UserService implements Serializable {
-
 
     @Autowired
     private UserRepository userRepository;
@@ -31,29 +29,33 @@ public class UserService implements Serializable {
         return userEntity;
     }
 
-    public UserEntity userLogin(UserEntity userEntity){
+    public UserEntity userLogin(UserEntity userEntity) {
         System.out.println(userEntity);
         return userRepository.findByUsername(userEntity.getUsername());
     }
 
-    public void editUserProfile(UserEntity updatedUser, Authentication authentication){
+    public void editUserProfile(UserEntity updatedUser, Authentication authentication) {
         try {
             UserEntity dbUserEntity = userRepository.findByUsername(authentication.getName());
-            if(dbUserEntity != null) {
-            if(updatedUser.getFirstname() != null) {
-                dbUserEntity.setFirstname(updatedUser.getFirstname());
-            }
-            if(updatedUser.getLastname() != null) {
-                dbUserEntity.setLastname(updatedUser.getLastname());
-            }
-            if(updatedUser.getUsername() != null) {
-                dbUserEntity.setUsername(updatedUser.getUsername());
-            }
-            if(updatedUser.getPassword() != null) {
-                dbUserEntity.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-            }
-            userRepository.save(dbUserEntity);
-        }
+            if (dbUserEntity != null) {
+                if (!updatedUser.getFirstname().isEmpty()) {
+                    System.out.println(updatedUser.getFirstname());
+                    dbUserEntity.setFirstname(updatedUser.getFirstname());
+                }
+                if (!updatedUser.getLastname().isEmpty()) {
+                    System.out.println(updatedUser.getLastname());
+                    dbUserEntity.setLastname(updatedUser.getLastname());
+                }
+                if (!updatedUser.getUsername().isEmpty()) {
+                    System.out.println(updatedUser.getUsername());
+                    dbUserEntity.setUsername(updatedUser.getUsername());
+                }
+                if (!updatedUser.getPassword().isEmpty()) {
+                    System.out.println(updatedUser.getPassword());
+                    dbUserEntity.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+                }
+                userRepository.save(dbUserEntity);
+        }  
         } catch(EntityNotFoundException e) {
             e.printStackTrace();
             System.out.println(e.getLocalizedMessage());

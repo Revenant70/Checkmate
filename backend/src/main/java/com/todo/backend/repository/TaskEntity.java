@@ -7,8 +7,11 @@ import lombok.ToString;
 
 import java.io.Serializable;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
-@Table(name="todo")
+@Table(name = "todo")
 @Getter
 @Setter
 @ToString
@@ -31,7 +34,8 @@ public class TaskEntity implements Serializable {
     @Column(name = "title")
     private String title;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "userid", referencedColumnName = "userid", nullable = false)
     private UserEntity user;
 

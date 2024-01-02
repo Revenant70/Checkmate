@@ -12,9 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @Data
 @DynamicUpdate
 @DynamicInsert
@@ -22,29 +21,26 @@ public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userid", nullable = false, unique = true, updatable = false)
+    @Column(name = "userid", nullable = false, unique = true)
     private Long userid;
 
-    @Column(name = "username", nullable = false, unique = true, updatable = true)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password", nullable = false, updatable = true)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "firstname", updatable = true)
+    @Column(name = "firstname")
     private String firstname;
 
-    @Column(name = "lastname", updatable = true)
+    @Column(name = "lastname")
     private String lastname;
 
-    @Column(name = "enabled", nullable = false, updatable = true)
+    @Column(name = "enabled", nullable = false)
     private Boolean enabled = true;
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TaskEntity> tasks;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -55,6 +51,7 @@ public class UserEntity implements UserDetails {
     public String getPassword() {
         return password;
     }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

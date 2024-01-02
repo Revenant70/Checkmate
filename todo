@@ -2,15 +2,7 @@
 
 ## Frontend
 
-A Theme switcher for the main page
-This will be helpful - <https://daisyui.com/components/theme-controller/>
-
 ## Backend
 
-user authentication page
-
-- URGENT: Create a session based auth system so the user can continue to access resources once authenticated
-
-- Check for signup user (see backend todo)
-- Create forgot password recovery system (see backend todo)
-- Security for app (worry about that when the rest is done)
+Aloow users to edit tasks with the data being overwritten.
+Allow users to edit their profile without overriding their info.

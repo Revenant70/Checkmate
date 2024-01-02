@@ -56,7 +56,6 @@ public class TaskController {
 
    @PutMapping("/tasks/{taskId}")
    public ResponseEntity<String> updateUserTask(@RequestBody TaskEntity taskEntity, @PathVariable Long taskId) throws Exception {
-    System.out.println("This is the controller");
         try {
             taskService.updateTask(taskId, taskEntity);
             return new ResponseEntity<>("Task updated successfully", HttpStatus.OK);
