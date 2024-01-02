@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -28,7 +28,7 @@ export default function UserProfile() {
     try {
       const token = localStorage.getItem("JWT");
       const response = await axios.put(
-        "http://localhost:8080/api/users/edituserprofile",
+        "http://localhost:8080/api/users/edit-profile",
         {
           username: username,
           password: password,
@@ -63,9 +63,23 @@ export default function UserProfile() {
 
   const handleConfirmDelete = async () => {
     try {
-      // Add logic to delete the profile (e.g., API request)
+      const token = localStorage.getItem("JWT");
+      const response = await axios.delete(
+        "http://localhost:8080/api/users/delete-profile",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setFeedbackMessage("Profile updated successfully");
+        navigate("/auth");
+      } else {
+        setFeedbackMessage("Unexpected response status: " + response.status);
+      }
       setFeedbackMessage("Profile deleted!");
-      // Optionally, you can redirect the user or perform other actions after deletion
     } catch (error) {
       setFeedbackMessage("Error deleting profile: " + error.message);
     } finally {
@@ -99,16 +113,14 @@ export default function UserProfile() {
           onClick={sendBackToHome}
         />
       </div>
-      <div
-        className="min-h-screen flex items-center justify-center"
-      >
+      <div className="min-h-screen flex items-center justify-center">
         <motion.div
-        className="bg-base-200 drop-shadow-lg p-8 rounded-lg w-96"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 20 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-      >
+          className="bg-base-200 drop-shadow-lg p-8 rounded-lg w-96"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+        >
           <h2 className="text-2xl font-semibold mb-4 text-center">
             Edit Profile
           </h2>

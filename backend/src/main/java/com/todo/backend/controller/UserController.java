@@ -58,13 +58,23 @@ public class UserController {
         return new ResponseEntity(user, HttpStatus.OK);
     }
 
-    @PutMapping("/edituserprofile")
+    @PutMapping("/edit-profile")
     public ResponseEntity<?> editUserProfile(@RequestBody UserEntity updatedUser, Authentication authentication) throws Exception{
         try {
             userService.editUserProfile(updatedUser, authentication);
             return new ResponseEntity<String>("Profile edited", HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>("Could not edit profile", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/delete-profile")
+    public ResponseEntity<?> deleteUserProfile(Authentication authentication) throws Exception {
+        try {
+            userService.deleteUserProfile(authentication);
+            return new ResponseEntity<>("Profile Deleted", HttpStatus.OK);
+        } catch(Exception exception) {
+            return new ResponseEntity<>("Could not delete profile", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -31,7 +31,7 @@ public class TaskEntity implements Serializable {
     @Column(name = "title")
     private String title;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userid", referencedColumnName = "userid", nullable = false)
     private UserEntity user;
 

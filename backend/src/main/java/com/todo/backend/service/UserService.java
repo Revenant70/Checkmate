@@ -36,7 +36,6 @@ public class UserService implements Serializable {
         return userRepository.findByUsername(userEntity.getUsername());
     }
 
-    @Transactional
     public void editUserProfile(UserEntity updatedUser, Authentication authentication){
         try {
             UserEntity dbUserEntity = userRepository.findByUsername(authentication.getName());
@@ -59,7 +58,15 @@ public class UserService implements Serializable {
             e.printStackTrace();
             System.out.println(e.getLocalizedMessage());
         }
-        
+    }
+
+    public void deleteUserProfile(Authentication authentication) {
+        try {
+            UserEntity userEntity = userRepository.findByUsername(authentication.getName());
+            userRepository.deleteById(userEntity.getUserid());
+        } catch(Exception exception) {
+            System.out.println(exception.getLocalizedMessage());
+        }
     }
 
 }
