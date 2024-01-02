@@ -1,12 +1,15 @@
 /* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faX, faUser } from "@fortawesome/free-solid-svg-icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function AddTask({ fetchTasks }) {
-  const dateFormatRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[01])\s*(1[0-2]|0?[1-9]):[0-5][0-9](AM|PM)$/i;
+  const dateFormatRegex =
+    /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[01])\s*(1[0-2]|0?[1-9]):[0-5][0-9](AM|PM)$/i;
+  const navigate = new useNavigate();
 
   const [taskName, setTaskName] = useState("");
   const [desc, setDescName] = useState("");
@@ -61,6 +64,10 @@ export default function AddTask({ fetchTasks }) {
     }
   };
 
+  const profilePage = () => {
+    navigate("/profile/profilepage");
+  };
+
   const handleDueDateChange = (e) => {
     const value = e.target.value;
     setDueDate(value);
@@ -84,7 +91,7 @@ export default function AddTask({ fetchTasks }) {
   return (
     <>
       <div className="h-1/6 flex items-end justify-center">
-        <div className="footer items-center p-4 rounded-lg text-neutral-content w-1/2 drop-shadow-lg bg-base-200 mb-6">
+        <div className="footer flex flex-row grid-rows-auto items-center justify-between p-4 rounded-lg text-neutral-content w-1/2 drop-shadow-lg bg-base-200 mb-6 ">
           <aside>
             <motion.a
               onClick={toggleSpin}
@@ -105,12 +112,25 @@ export default function AddTask({ fetchTasks }) {
               <div className="ml-2">Add task</div>
             </motion.a>
           </aside>
+          <div className="mr-2">
+            <motion.a
+              className="cursor-pointer"
+              whileHover={{
+                scale: 1.025,
+                transition: { duration: 0.1 },
+              }}
+              whileTap={{ scale: 0.9 }}
+              onClick={profilePage}
+            >
+              <FontAwesomeIcon size="lg" icon={faUser} />
+            </motion.a>
+          </div>
         </div>
         <AnimatePresence>
           {isOpen && (
             <motion.form
               onSubmit={addTasks}
-              className="card-body w-1/4 h-3/5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary-content rounded-lg flex justify-center align-middle"
+              className="card-body w-1/4 h-3/5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 drop-shadow-lg bg-base-100 rounded-lg flex justify-center align-middle"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -166,12 +186,10 @@ export default function AddTask({ fetchTasks }) {
                     value={dueDate}
                     onChange={handleDueDateChange}
                     className={`input input-bordered ${
-                      dueDateError ? 'input-error' : ''
+                      dueDateError ? "input-error input-bordered" : ""
                     }`}
                   />
-                  {dueDateError && (
-                    <p className="error-text">{dueDateError}</p>
-                  )}
+                  {dueDateError && <p className="error-text">{dueDateError}</p>}
                 </div>
                 <div className="form-control">
                   <label className="label">

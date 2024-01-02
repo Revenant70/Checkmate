@@ -1,7 +1,6 @@
 package com.todo.backend.controller;
 
 import com.todo.backend.repository.TaskEntity;
-import com.todo.backend.repository.UserEntity;
 import com.todo.backend.repository.UserRepository;
 import com.todo.backend.service.TaskService;
 
@@ -37,7 +36,6 @@ public class TaskController {
             System.out.println(e.getMessage());
             return new ResponseEntity<>("There was an internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        System.out.println(tasks);
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
@@ -55,20 +53,22 @@ public class TaskController {
         }
         
     }
-//    @GetMapping("/tasks/{taskid}")
-//    public ResponseEntity getSingleUserTask() throws Exception {
-//        return new ResponseEntity(, HttpStatus.OK);
-//    }
-//
-//    @PutMapping("/tasks/{taskId}")
-//    public ResponseEntity updateUserTask() throws Exception {
-//        return new ResponseEntity(, HttpStatus.OK);
-//    }
-//
+
+   @PutMapping("/tasks/{taskId}")
+   public ResponseEntity<String> updateUserTask(@RequestBody TaskEntity taskEntity, @PathVariable Long taskId) throws Exception {
+    System.out.println("This is the controller");
+        try {
+            taskService.updateTask(taskId, taskEntity);
+            return new ResponseEntity<>("Task updated successfully", HttpStatus.OK);
+       } catch(Exception exception) {
+            System.out.println(exception);
+        return new ResponseEntity<>("Couldn't update task", HttpStatus.INTERNAL_SERVER_ERROR);
+       }
+   }
+
    @DeleteMapping("/tasks/{taskId}")
    public ResponseEntity<String> deleteUserTask(@PathVariable Long taskId) throws Exception {
        try {
-            System.out.println(taskId);
             taskService.deleteTask(taskId);
             return new ResponseEntity<>("Task deleted successfully", HttpStatus.OK);
        } catch(Exception exception) {
@@ -76,11 +76,17 @@ public class TaskController {
         return new ResponseEntity<>("Couldn't delete task", HttpStatus.INTERNAL_SERVER_ERROR);
        }
    }
-//
-//    @DeleteMapping("/tasks/{taskId}/complete")
-//    public ResponseEntity deleteUserTask() throws Exception {
-//        return new ResponseEntity(, HttpStatus.OK);
-//    }
+
+   @PutMapping("/tasks/{taskId}/complete")
+   public ResponseEntity<String> completeUserTask(@PathVariable Long taskId) throws Exception {
+        try {
+            taskService.completeTask(taskId);
+            return new ResponseEntity<>("Task completed successfully", HttpStatus.OK);
+       } catch(Exception exception) {
+            System.out.println(exception);
+        return new ResponseEntity<>("Couldn't complete task", HttpStatus.INTERNAL_SERVER_ERROR);
+       }
+   }
 
 
 }

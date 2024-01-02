@@ -9,6 +9,7 @@ function App() {
         <Route path="/auth/passwordrecovery/changepassword" />
         <Route path="/auth/passwordrecovery/confirmationcode" />
         <Route path="/auth/signup" />
+        <Route path="/profile/profilepage" />
       </Routes>
   );
 }

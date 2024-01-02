@@ -13,6 +13,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Task() {
+  const dateFormatRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[1-2][0-9]|3[01])\s*(1[0-2]|0?[1-9]):[0-5][0-9](AM|PM)$/i;
+
   let taskId = "";
   const [taskName, setTaskName] = useState("");
   const [desc, setDescName] = useState("");
@@ -20,15 +22,37 @@ export default function Task() {
   const [status, setStatus] = useState("");
 
   const [tasks, setTasks] = useState([]);
-
   const [isOpen, setIsOpen] = useState(false);
+  const [dueDateError, setDueDateError] = useState("");
+
 
   const shakeVariants = {
     initial: { x: 0 },
     shake: {
-      x: [-2.5, 2.5, -2.5, 2.5, 0],
-      transition: { duration: 0.3 },
+      x: [-2, 2, -2, 2, 0],
+      transition: { duration: 0.275 },
     },
+  };
+
+  const completeTask = async (taskId) => {
+    try {
+      const token = localStorage.getItem("JWT");
+      const response = await axios.put(
+        `http://localhost:8080/api/tasks/${taskId}/complete`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        fetchUserTasks();
+        console.log("Task marked as complete");
+      }
+    } catch (e) {
+      console.log("Failed to mark task as complete:", e.message);
+    }
   };
 
   const deleteTask = async (taskId) => {
@@ -52,6 +76,7 @@ export default function Task() {
   };
 
   const editTask = async (taskId) => {
+    console.log(taskId);
     try {
       const token = localStorage.getItem("JWT");
       const response = await axios.put(
@@ -68,6 +93,7 @@ export default function Task() {
           },
         }
       );
+      console.log(response.data);
       if (response.status == 200) {
         console.log(response.data);
         fetchUserTasks();
@@ -86,7 +112,6 @@ export default function Task() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(result.data);
       if (result.data.isEmpty) {
         console.log("No data");
       } else {
@@ -104,6 +129,17 @@ export default function Task() {
   function toggleModalFunction() {
     setIsOpen(!isOpen);
   }
+
+  const handleDueDateChange = (e) => {
+    const value = e.target.value;
+    setDueDate(value);
+
+    if (value && !dateFormatRegex.test(value)) {
+      setDueDateError("Invalid date format");
+    } else {
+      setDueDateError("");
+    }
+  };
 
   return (
     <div className="h-screen">
@@ -144,13 +180,14 @@ export default function Task() {
                         </div>
                         <motion.ul
                           tabIndex={0}
-                          className="dropdown-content z-[1] menu flex flex-row justify-center items-center p-2 shadow bg-base-100 rounded-box w-52"
+                          className="dropdown-content z-[1] menu flex flex-row justify-center items-center p-2 bg-base-100 drop-shadow-lg rounded-box w-52"
                         >
                           <li>
                             <motion.a
                               whileHover="shake"
                               initial="initial"
                               variants={shakeVariants}
+                              onClick={() => completeTask(task.taskid)}
                             >
                               <FontAwesomeIcon
                                 color="green"
@@ -196,7 +233,7 @@ export default function Task() {
           {isOpen && (
             <motion.form
               onSubmit={editTask}
-              className="card-body w-1/4 h-3/5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary-content rounded-lg flex justify-center align-middle"
+              className="card-body w-1/4 h-3/5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-base-200 drop-shadow-lg rounded-lg flex justify-center align-middle"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -226,7 +263,6 @@ export default function Task() {
                     placeholder="task name"
                     onChange={(e) => setTaskName(e.target.value)}
                     className="input input-bordered"
-                    required
                   />
                 </div>
                 <div className="form-control">
@@ -246,21 +282,32 @@ export default function Task() {
                   </label>
                   <input
                     type="text"
-                    placeholder="due date"
-                    onChange={(e) => setDueDate(e.target.value)}
-                    className="input input-bordered"
+                    placeholder="12/25 5:10PM"
+                    value={dueDate}
+                    onChange={handleDueDateChange}
+                    className={`input input-bordered ${
+                      dueDateError ? 'input-error' : ''
+                    }`}
                   />
+                  {dueDateError && (
+                    <p className="error-text">{dueDateError}</p>
+                  )}
                 </div>
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text">Status</span>
                   </label>
-                  <input
-                    type="text"
-                    placeholder="status"
+                  <select
                     onChange={(e) => setStatus(e.target.value)}
-                    className="input input-bordered"
-                  />
+                    className="select select-bordered"
+                  >
+                    <option disabled selected>
+                      Pick a status for this task
+                    </option>
+                    <option>To Do</option>
+                    <option>In Progress</option>
+                    <option>Complete</option>
+                  </select>
                 </div>
                 <div className="form-control mt-6">
                   <button className="btn btn-primary">Submit task</button>

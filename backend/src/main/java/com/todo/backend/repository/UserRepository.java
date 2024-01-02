@@ -6,8 +6,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
+
 @Repository
 @EnableJpaRepositories
-public interface UserRepository extends JpaRepository<UserEntity, String> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+    UserEntity findByUserid(Long userid);
     UserEntity findByUsername(@Param("username") String username);
 }

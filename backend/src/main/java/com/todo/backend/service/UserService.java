@@ -1,13 +1,17 @@
 package com.todo.backend.service;
 
 import com.todo.backend.repository.*;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.util.*;
 
 
 @Service
@@ -28,11 +32,34 @@ public class UserService implements Serializable {
     }
 
     public UserEntity userLogin(UserEntity userEntity){
-        UserEntity dbUser = userRepository.findByUsername(userEntity.getUsername());
+        System.out.println(userEntity);
         return userRepository.findByUsername(userEntity.getUsername());
     }
 
-
-
+    @Transactional
+    public void editUserProfile(UserEntity updatedUser, Authentication authentication){
+        try {
+            UserEntity dbUserEntity = userRepository.findByUsername(authentication.getName());
+            if(dbUserEntity != null) {
+            if(updatedUser.getFirstname() != null) {
+                dbUserEntity.setFirstname(updatedUser.getFirstname());
+            }
+            if(updatedUser.getLastname() != null) {
+                dbUserEntity.setLastname(updatedUser.getLastname());
+            }
+            if(updatedUser.getUsername() != null) {
+                dbUserEntity.setUsername(updatedUser.getUsername());
+            }
+            if(updatedUser.getPassword() != null) {
+                dbUserEntity.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            }
+            userRepository.save(dbUserEntity);
+        }
+        } catch(EntityNotFoundException e) {
+            e.printStackTrace();
+            System.out.println(e.getLocalizedMessage());
+        }
+        
+    }
 
 }

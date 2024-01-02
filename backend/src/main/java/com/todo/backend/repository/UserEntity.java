@@ -2,6 +2,9 @@ package com.todo.backend.repository;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,22 +16,28 @@ import java.util.List;
 @Entity
 @Table(name="users")
 @Data
+@DynamicUpdate
+@DynamicInsert
 public class UserEntity implements UserDetails {
 
     @Id
-    @Column(name = "username", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "userid", nullable = false, unique = true, updatable = false)
+    private Long userid;
+
+    @Column(name = "username", nullable = false, unique = true, updatable = true)
     private String username;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false, updatable = true)
     private String password;
 
-    @Column(name = "firstname")
+    @Column(name = "firstname", updatable = true)
     private String firstname;
 
-    @Column(name = "lastname")
+    @Column(name = "lastname", updatable = true)
     private String lastname;
 
-    @Column(name = "enabled", nullable = false)
+    @Column(name = "enabled", nullable = false, updatable = true)
     private Boolean enabled = true;
 
     @Enumerated(EnumType.STRING)

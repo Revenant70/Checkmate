@@ -3,7 +3,6 @@ package com.todo.backend.service;
 import com.todo.backend.repository.TaskEntity;
 import com.todo.backend.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -22,11 +21,22 @@ public class TaskService implements Serializable {
     }
 
     public void createTask(TaskEntity taskEntity){
-        
         taskRepository.save(taskEntity);
     }
 
     public void deleteTask(Long taskId){
         taskRepository.deleteById(taskId);
+    }
+
+    public void completeTask(Long taskId) {
+        Optional<TaskEntity> taskEntity = taskRepository.findById(taskId);
+        taskEntity.get().setStatus("Complete");
+        taskRepository.save(taskEntity.get());
+    }
+
+    public void updateTask(Long taskId, TaskEntity taskEntity) {
+        System.out.println("Hello world!");
+        Optional<TaskEntity> dbTaskEntity = taskRepository.findById(taskId);
+        taskRepository.save(dbTaskEntity.get());
     }
 }

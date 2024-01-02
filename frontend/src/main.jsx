@@ -7,6 +7,7 @@ import ForgotPass from './components/UserForgotPassword.jsx'
 import ChangePass from './components/ChangeUserPassword.jsx'
 import SignUp from './components/SignUp.jsx';
 import ConfirmationCode from './components/ConfirmationCodeField.jsx';
+import UserProfile from './components/UserProfile.jsx';
 
 import './index.css'
 import {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
   {
     path: '/home',
     element: <Task />,
+  },
+  {
+    path: '/profile/profilepage',
+    element: <UserProfile />
   },
 
   

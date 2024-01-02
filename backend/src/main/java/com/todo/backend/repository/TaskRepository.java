@@ -10,7 +10,5 @@ import java.util.Optional;
 @Repository
 @EnableJpaRepositories
 public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
-
-
     Optional<List<TaskEntity>> findByUserUsername(String username);
 }

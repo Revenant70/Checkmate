@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Setter
 @ToString
 public class TaskEntity implements Serializable {
+
     @Id
     @Column(name = "taskid")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +31,8 @@ public class TaskEntity implements Serializable {
     @Column(name = "title")
     private String title;
 
-    @ManyToOne
-    @JoinColumn(name = "username", referencedColumnName = "username" ,nullable = false)
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "userid", referencedColumnName = "userid", nullable = false)
     private UserEntity user;
 
 }
