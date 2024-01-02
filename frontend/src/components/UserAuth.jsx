@@ -11,40 +11,35 @@ export default function UserAuth() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/users/login", {
+        "http://localhost:8080/api/users/login",
+        {
           username: username,
           password: password,
         }
       );
-      if(response.status == 200){
-          localStorage.setItem("JWT", response.data)
-          navigate("/home");
+      if (response.status == 200) {
+        localStorage.setItem("JWT", response.data);
+        navigate("/home");
       }
-
     } catch (e) {
-      console.log('Login failed', e.message);
-
+      console.log("Login failed", e.message);
     }
   };
 
-  function sendToPassRecovery(){
-    navigate("/auth/passwordrecovery")
+  function sendToPassRecovery() {
+    navigate("/auth/passwordrecovery");
   }
 
-  function sendToSignUp(){
-    navigate("/auth/signup")
+  function sendToSignUp() {
+    navigate("/auth/signup");
   }
 
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse">
-        <div className="text-center lg:text-left w-5/12">
-          <h1 className="text-5xl font-bold">Login now.</h1>
-          <p className="py-6">
-            Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-            excepturi exercitationem quasi. In deleniti eaque aut repudiandae et
-            a id nisi.
-          </p>
+        <div className="text-center lg:text-left w-full sm:w-9/12 md:w-8/12 flex flex-col items-center lg:items-start">
+          <h1 className="text-5xl font-bold">Welcome to CheckMate.</h1>
+          <p className="py-6 w-72">Enter your credentials to access your account.</p>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <form className="card-body" onSubmit={authenticateUser}>

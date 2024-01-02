@@ -58,11 +58,13 @@ export default function Task() {
     }
   };
 
-  const deleteTask = async (taskId) => {
+  const deleteTask = async (e) => {
+    e.preventDefault();
     try {
       const token = localStorage.getItem("JWT");
       const response = await axios.delete(
         `http://localhost:8080/api/tasks/${taskId}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -79,7 +81,6 @@ export default function Task() {
   };
 
   const editTask = async (e) => {
-    console.log(taskId);
     e.preventDefault();
     try {
       const token = localStorage.getItem("JWT");
@@ -101,6 +102,7 @@ export default function Task() {
       if (response.status == 200) {
         console.log(response.data);
         fetchUserTasks();
+        toggleModalFunction();
         console.log("Task edited");
       }
     } catch (e) {
@@ -151,7 +153,7 @@ export default function Task() {
 
   return (
     <div className="h-screen">
-      <div className="fixed top-10 left-10">
+      <div className="fixed bottom-10 left-10 md:top-10 md:bottom-full">
         <FontAwesomeIcon
           className="btn btn-sm"
           icon={faArrowLeft}
@@ -202,7 +204,10 @@ export default function Task() {
                               whileHover="shake"
                               initial="initial"
                               variants={shakeVariants}
-                              onClick={(e) => completeTask(e)}
+                              onClick={(e) => {
+                                setTaskId(task.taskid);
+                                completeTask(e);
+                              }}
                             >
                               <FontAwesomeIcon
                                 color="green"
@@ -229,7 +234,10 @@ export default function Task() {
                               whileHover="shake"
                               initial="initial"
                               variants={shakeVariants}
-                              onClick={() => deleteTask(Event, task.taskid)}
+                              onClick={(e) => {
+                                setTaskId(task.taskid)
+                                deleteTask(e);
+                              }}
                             >
                               <FontAwesomeIcon
                                 color="red"

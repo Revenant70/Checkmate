@@ -41,8 +41,17 @@ public class TaskService implements Serializable {
         try {
             Optional<TaskEntity> dbTaskEntity = taskRepository.findById(taskId);
             if (dbTaskEntity != null) {
-                if(dbTaskEntity.get().getTitle() != null) {
-                    
+                if(!taskEntity.getTitle().isEmpty()) {
+                   dbTaskEntity.get().setTitle(taskEntity.getTitle()); 
+                }
+                if(!taskEntity.getDesc().isEmpty()) {
+                    dbTaskEntity.get().setDesc(taskEntity.getDesc());
+                }
+                if(!taskEntity.getDueDate().isEmpty()) {
+                    dbTaskEntity.get().setDueDate(taskEntity.getDueDate());
+                }
+                if(!taskEntity.getStatus().isEmpty()) {
+                    dbTaskEntity.get().setStatus(taskEntity.getStatus());
                 }
                 taskRepository.save(dbTaskEntity.get());
             }

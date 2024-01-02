@@ -106,7 +106,7 @@ export default function UserProfile() {
 
   return (
     <>
-      <div className="fixed top-10 left-10">
+      <div className="fixed top-10 left-10 z-50">
         <FontAwesomeIcon
           className="btn btn-sm"
           icon={faArrowLeft}

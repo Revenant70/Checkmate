@@ -79,6 +79,7 @@ public class TaskController {
    @PutMapping("/tasks/{taskId}/complete")
    public ResponseEntity<String> completeUserTask(@PathVariable Long taskId) throws Exception {
         try {
+            System.out.println(taskId);
             taskService.completeTask(taskId);
             return new ResponseEntity<>("Task completed successfully", HttpStatus.OK);
        } catch(Exception exception) {

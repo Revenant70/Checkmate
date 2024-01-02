@@ -45,7 +45,7 @@ export default function SignUp() {
   return (
     <>
       <div className="hero min-h-screen bg-base-200">
-      <div className="fixed top-10 left-10">
+      <div className="fixed top-10 left-10 z-50">
         <FontAwesomeIcon
           className="btn btn-sm"
           icon={faArrowLeft}
