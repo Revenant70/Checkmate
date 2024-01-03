@@ -2,7 +2,6 @@ package com.todo.backend.service;
 
 import com.todo.backend.repository.TaskEntity;
 import com.todo.backend.repository.TaskRepository;
-import com.todo.backend.repository.UserEntity;
 
 import jakarta.persistence.EntityNotFoundException;
 
