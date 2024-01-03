@@ -1,10 +1,11 @@
 package com.todo.backend.service;
 
+import com.todo.backend.Exceptions.TokenExpiredException;
 import com.todo.backend.repository.*;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
-import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,9 @@ public class UserService implements Serializable {
     private UserRepository userRepository;
 
     @Autowired
+    private ResetTokenRepository resetTokenRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -40,7 +44,6 @@ public class UserService implements Serializable {
     }
 
     public UserEntity userLogin(UserEntity userEntity) {
-        System.out.println(userEntity);
         return userRepository.findByUsername(userEntity.getUsername());
     }
 
@@ -49,19 +52,15 @@ public class UserService implements Serializable {
             UserEntity dbUserEntity = userRepository.findByUsername(authentication.getName());
             if (dbUserEntity != null) {
                 if (!updatedUser.getFirstname().isEmpty()) {
-                    System.out.println(updatedUser.getFirstname());
                     dbUserEntity.setFirstname(updatedUser.getFirstname());
                 }
                 if (!updatedUser.getLastname().isEmpty()) {
-                    System.out.println(updatedUser.getLastname());
                     dbUserEntity.setLastname(updatedUser.getLastname());
                 }
                 if (!updatedUser.getUsername().isEmpty()) {
-                    System.out.println(updatedUser.getUsername());
                     dbUserEntity.setUsername(updatedUser.getUsername());
                 }
                 if (!updatedUser.getPassword().isEmpty()) {
-                    System.out.println(updatedUser.getPassword());
                     dbUserEntity.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
                 }
                 userRepository.save(dbUserEntity);
@@ -89,6 +88,7 @@ public class UserService implements Serializable {
 
             String url = "http://localhost:5173/auth/passwordrecovery/changepassword/" +
                      userEntity.getUserid() + "/" + token.getToken();
+            resetTokenRepository.save(token);
 
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(gmail);
@@ -100,6 +100,27 @@ public class UserService implements Serializable {
             System.out.println(e.getLocalizedMessage());
         }
 
+    }
+
+    @Transactional
+    public void authenticateToken(ResetToken resetToken) {
+        try {
+            ResetToken dbResetToken = resetTokenRepository.findByToken(resetToken.getToken());
+            Date currentDate = new Date();
+            if(currentDate.before(dbResetToken.getExpiryDate())) {
+                resetTokenRepository.deleteByToken(dbResetToken.getToken());
+            } else {
+                throw new TokenExpiredException("Password reset token has expired");
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getLocalizedMessage());
+        }
+    }
+
+    public void resetPassword(UserEntity userEntity) {
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        userRepository.save(userEntity);;
     }
 
 }
