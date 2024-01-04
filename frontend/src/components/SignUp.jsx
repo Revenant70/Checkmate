@@ -3,6 +3,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { serveraddress } from "../server/serverconfig";
 
 export default function SignUp() {
   const [password, setPassword] = useState("");
@@ -23,7 +24,7 @@ export default function SignUp() {
     e.preventDefault();
     try {
       const response = await axios.post(
-          "http://localhost:8080/api/users/signup",
+          `${serveraddress}/api/users/signup`,
           {
             username: username,
             password: password,

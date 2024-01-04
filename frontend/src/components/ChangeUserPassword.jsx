@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { serveraddress } from "../server/serverconfig";
 
 export default function ChangeUserPassword() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function ChangeUserPassword() {
     const authenticateToken = async () => {
       try {
         const response = await axios.post(
-          'http://localhost:8080/api/users/authenticate-token',
+          `${serveraddress}/api/users/authenticate-token`,
           {
             userId,
             token,
@@ -52,7 +53,7 @@ export default function ChangeUserPassword() {
     console.log(password);
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/users/reset-password',
+        `${serveraddress}/api/users/reset-password`,
         {
           password
         }

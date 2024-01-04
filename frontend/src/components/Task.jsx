@@ -12,6 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { serveraddress } from "../server/serverconfig";
 
 export default function Task() {
   const navigate = new useNavigate();
@@ -41,7 +42,7 @@ export default function Task() {
     try {
       const token = localStorage.getItem("JWT");
       const response = await axios.put(
-        `http://localhost:8080/api/tasks/${taskId}/complete`,
+        `${serveraddress}/api/tasks/${taskId}/complete`,
         {},
         {
           headers: {
@@ -63,7 +64,7 @@ export default function Task() {
     try {
       const token = localStorage.getItem("JWT");
       const response = await axios.delete(
-        `http://localhost:8080/api/tasks/${taskId}`,
+        `${serveraddress}/api/tasks/${taskId}`,
         {},
         {
           headers: {
@@ -85,7 +86,7 @@ export default function Task() {
     try {
       const token = localStorage.getItem("JWT");
       const response = await axios.put(
-        `http://localhost:8080/api/tasks/${taskId}`,
+        `${serveraddress}/api/tasks/${taskId}`,
         {
           title: taskName,
           desc: desc,
@@ -113,7 +114,7 @@ export default function Task() {
   const fetchUserTasks = async () => {
     try {
       const token = localStorage.getItem("JWT");
-      const result = await axios.get("http://localhost:8080/api/tasks", {
+      const result = await axios.get(`${serveraddress}/api/tasks`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

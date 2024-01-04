@@ -5,6 +5,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import { serveraddress } from "../server/serverconfig";
 
 export default function UserProfile() {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
@@ -28,7 +29,7 @@ export default function UserProfile() {
     try {
       const token = localStorage.getItem("JWT");
       const response = await axios.put(
-        "http://localhost:8080/api/users/edit-profile",
+        `${serveraddress}/api/users/edit-profile`,
         {
           username: username,
           password: password,
@@ -65,7 +66,7 @@ export default function UserProfile() {
     try {
       const token = localStorage.getItem("JWT");
       const response = await axios.delete(
-        "http://localhost:8080/api/users/delete-profile",
+        `${serveraddress}/api/users/delete-profile`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

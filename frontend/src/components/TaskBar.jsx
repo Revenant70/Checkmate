@@ -5,6 +5,7 @@ import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
+import { serveraddress } from "../server/serverconfig";
 
 export default function AddTask({ fetchTasks }) {
   const dateFormatRegex =
@@ -40,7 +41,7 @@ export default function AddTask({ fetchTasks }) {
     try {
       const token = localStorage.getItem("JWT");
       const response = await axios.post(
-        "http://localhost:8080/api/tasks",
+        `${serveraddress}/api/tasks`,
         {
           title: taskName,
           desc: desc,

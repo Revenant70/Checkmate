@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
+import { serveraddress } from "../server/serverconfig";
 
 export default function UserForgotPassword() {
   const emailRegex = new RegExp("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b");
@@ -34,7 +35,7 @@ export default function UserForgotPassword() {
     e.preventDefault();
     try {
       await axios.post(
-        "http://localhost:8080/api/users/forgot-password", 
+        `${serveraddress}/api/users/forgot-password`, 
         {
           email: email
         }
