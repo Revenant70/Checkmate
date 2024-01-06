@@ -86,7 +86,7 @@ public class UserService implements Serializable {
             Date date = ResetTokenService.calculateExpiryDate();
             ResetToken token = ResetTokenService.generateToken(userEntity, date);
 
-            String url = "http://localhost:5173/auth/passwordrecovery/changepassword/" +
+            String url = "https://checkmate.jacksonmcgillivary.dev/auth/passwordrecovery/changepassword/" +
                      userEntity.getUserid() + "/" + token.getToken();
             resetTokenRepository.save(token);
 

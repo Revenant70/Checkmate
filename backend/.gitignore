@@ -34,3 +34,5 @@ build/
 
 ### Config and keys ###
 application.properties
+docker-compose.yaml
+Dockerfile

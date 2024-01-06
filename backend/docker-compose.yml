@@ -1,0 +1,29 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: 'postgres:latest'
+    networks:
+      - mynetwork
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_DB=Checkmate"
+      - "POSTGRES_PASSWORD=Cheesecake"
+    ports:
+      - "5432:5432"
+
+  spring-app:
+    image: springboot-docker-checkmate.jar:latest
+    networks:
+      - mynetwork
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/Checkmate
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Cheesecake
+
+networks:
+  mynetwork:

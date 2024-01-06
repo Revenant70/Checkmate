@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "https://checkmate.jacksonmcgillivary.dev", allowCredentials = "true")
 public class TaskController {
 
 
