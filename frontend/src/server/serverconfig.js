@@ -1,1 +1,1 @@
-export const serveraddress = "http://localhost:8080";
+export const serveraddress = "https://jpm-be.me";
