@@ -65,7 +65,6 @@ export default function Task() {
       const token = localStorage.getItem("JWT");
       const response = await axios.delete(
         `${serveraddress}/api/tasks/${taskId}`,
-        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -77,7 +76,7 @@ export default function Task() {
         console.log("Task deleted");
       }
     } catch (e) {
-      console.log("Task failed to be added to the system:", e.message);
+      console.log("Task failed to be deleted from system:", e.message);
     }
   };
 

@@ -20,7 +20,7 @@ export default function UserAuth() {
       );
       if (response.status == 200) {
         localStorage.setItem("JWT", response.data);
-        navigate("/home");
+        navigate("/body");
       }
     } catch (e) {
       console.log("Login failed", e.message);
